@@ -3,12 +3,16 @@
 <form action="" method="POST">
     <div class="row">
         <div class="col">
-            <label>Firstname:</label>
-            <input type="text" name="firstname" class="form-control">
+            <div class="form-group">
+                <label>Firstname:</label>
+                <input type="text" name="firstname" class="form-control">
+            </div>
         </div>
         <div class="col">
-            <label>Lastname:</label>
-            <input type="text" name="lastname" class="form-control">
+            <div class="form-group">
+                <label>Lastname:</label>
+                <input type="text" name="lastname" class="form-control">
+            </div>
         </div>
     </div>
     <div class="form-group">
