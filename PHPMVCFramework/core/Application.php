@@ -1,11 +1,9 @@
 <?php
 
-
 namespace app\core;
 
-
-
-class Application {
+class Application
+{
     public static $ROOT_DIR;
     public Router $router;
     public Request $request;
@@ -22,14 +20,16 @@ class Application {
         $this->router = new Router($this->request, $this->response);
     }
 
-    public function run() {
+
+    public function run()
+    {
         echo $this->router->resolve();
     }
-    
+
 
     /**
      * Get the value of controller
-     */ 
+     */
     public function getController()
     {
         return $this->controller;
@@ -39,7 +39,7 @@ class Application {
      * Set the value of controller
      *
      * @return  self
-     */ 
+     */
     public function setController(Controller $controller)
     {
         $this->controller = $controller;
