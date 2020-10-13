@@ -9,10 +9,22 @@ abstract class Model
     public const RULE_MIN       = 'min';
     public const RULE_MAX       = 'max';
     public const RULE_MATCH     = 'match';
+    public const RULE_UNIQUE     = 'unique';
 
     public array $errors = [];
 
     abstract public function rules(): array;
+
+    public function labels(): array
+    {
+        return [];
+    }
+
+
+    public function getLabels($attribute): string
+    {
+        return $this->labels()[$attribute];
+    }
 
 
     public function loadData($data)
@@ -52,7 +64,23 @@ abstract class Model
                 }
 
                 if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
+                    $rule['match'] = $this->getLabels($rule['match']);
                     $this->addError($attribute, self::RULE_MATCH, $rule);
+                }
+
+                if ($ruleName === self::RULE_UNIQUE) {
+                    $className  = $rule['class'];
+                    $tableName  = $className::tableName();
+                    $uniqueAttr = $rule['attribute'] ?? $attribute;
+
+                    $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttr = :attr");
+                    $statement->bindValue(":attr", $value);
+                    $statement->execute();
+                    $record = $statement->fetchObject();
+
+                    if ($record) {
+                        $this->addError($attribute, self::RULE_UNIQUE, ['field' => $this->getLabels($attribute)]);
+                    }
                 }
             }
         }
@@ -74,11 +102,12 @@ abstract class Model
     public function errormsg(): array
     {
         return [
-            self::RULE_REQUIRED => 'The feild is Required',
+            self::RULE_REQUIRED => '*This feild is Required',
             self::RULE_EMAIL    => 'Emial must be a valid Email',
             self::RULE_MIN      => 'It must be minimum {min} character',
             self::RULE_MAX      => 'It must be maximum {max} character',
-            self::RULE_MATCH    => 'This feild must be the same as {match}'
+            self::RULE_MATCH    => 'This feild must be the same as {match}',
+            self::RULE_UNIQUE   => 'Record with this {field} already exists'
         ];
     }
 

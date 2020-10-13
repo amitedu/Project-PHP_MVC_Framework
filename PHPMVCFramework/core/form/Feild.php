@@ -30,7 +30,7 @@ class Feild
                 </div>
             </div>
         ',
-            $this->attribute,
+            $this->model->getLabels($this->attribute),
             $this->type,
             $this->attribute,
             $this->model->{$this->attribute},

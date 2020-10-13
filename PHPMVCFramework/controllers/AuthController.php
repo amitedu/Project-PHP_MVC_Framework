@@ -35,7 +35,9 @@ class AuthController extends Controller
             $user->loadData($request->getBody());
 
             if ($user->validate() && $user->save()) {
-                return 'registration success';
+                Application::$app->session->setFlash('success', 'Thank you for Registering');
+                Application::$app->response->redirect('/');
+                exit();
             }
 
             $this->setLayout('auth');
